@@ -3,10 +3,21 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import logging from './config/logging';
 import config from './config/config';
-import sampleRoutes from './routes/sample';
+import mongoose from 'mongoose';
+import pairRoutes from './routes/pair';
 
 const NAMESPACE = 'Server';
 const router = express();
+
+/** Connect to Mongo */
+mongoose
+    .connect(config.mongo.url, config.mongo.options)
+    .then((result) => {
+        logging.info(NAMESPACE, 'Mongo Connected');
+    })
+    .catch((error) => {
+        logging.error(NAMESPACE, error.message, error);
+    });
 
 /** Log the request */
 router.use((req, res, next) => {
@@ -39,7 +50,7 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-router.use('/sample', sampleRoutes);
+router.use('/api/', pairRoutes);
 
 /** Error handling */
 router.use((req, res, next) => {
