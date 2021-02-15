@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import Pair from '../models/Pair';
+import Token from '../models/token';
 
-const getAllPairs = (req: Request, res: Response, next: NextFunction) => {
-    Pair.find()
+const getAllTokens = (req: Request, res: Response, next: NextFunction) => {
+    Token.find()
         .exec()
         .then((results) => {
             return res.status(200).json({
-                pairs: results,
+                tokens: results,
                 count: results.length
             });
         })
@@ -18,4 +18,4 @@ const getAllPairs = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
-export default { getAllPairs };
+export default { getAllTokens };

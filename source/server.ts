@@ -4,7 +4,7 @@ import express from 'express';
 import logging from './config/logging';
 import config from './config/config';
 import mongoose from 'mongoose';
-import pairRoutes from './routes/pair';
+import tokenRoutes from './routes/tokens';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -50,7 +50,7 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-router.use('/api/', pairRoutes);
+router.use('/api/', tokenRoutes);
 
 /** Error handling */
 router.use((req, res, next) => {
