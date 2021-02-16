@@ -9,7 +9,7 @@ import tokenRoutes from './routes/tokens';
 const NAMESPACE = 'Server';
 const router = express();
 
-/** Connect to Mongo */
+/** MONGO */
 mongoose
     .connect(config.mongo.url, config.mongo.options)
     .then((result) => {
@@ -19,24 +19,24 @@ mongoose
         logging.error(NAMESPACE, error.message, error);
     });
 
-/** Log the request */
+/** LOG */
 router.use((req, res, next) => {
-    /** Log the req */
+    /** REQ */
     logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
     res.on('finish', () => {
-        /** Log the res */
+        /** RES */
         logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
     });
 
     next();
 });
 
-/** Parse the body of the request */
+/** PARSE REQUEST BODY */
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-/** Rules of our API */
+/** REST API, CORS */
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -49,10 +49,10 @@ router.use((req, res, next) => {
     next();
 });
 
-/** Routes go here */
+/** API ROUTES */
 router.use('/api/', tokenRoutes);
 
-/** Error handling */
+/** ERROR */
 router.use((req, res, next) => {
     const error = new Error('Not found');
 
@@ -61,6 +61,29 @@ router.use((req, res, next) => {
     });
 });
 
+// HTTP Server
 const httpServer = http.createServer(router);
 
-httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`));
+// WEB3
+const Web3 = require('web3');
+const web3 = new Web3(config.server.infuraurl);
+
+// UniswapV2Factory Contract
+const factoryAddress = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+const factoryAbi = require('./abi/uniswap-V2-factory-abi.js');
+const erc20abi = require('./abi/erc20-abi.js');
+
+var uniswapV2FactoryContract = new web3.eth.Contract(factoryAbi, factoryAddress);
+
+// Check for PairCreated Events
+uniswapV2FactoryContract.events
+    .PairCreated({})
+    .on('data', async function (event: any) {
+        logging.info(NAMESPACE, event);
+        const token0 = new web3.eth.Contract(erc20abi, event.returnValues.token0);
+        const token1 = new web3.eth.Contract(erc20abi, event.returnValues.token1);
+        logging.info(NAMESPACE, `New pair on Uniswap V2: ${await token0.methods.symbol().call()} ${event.returnValues.token0} - ${await token1.methods.symbol().call()} ${event.returnValues.token1}!`);
+    })
+    .on('error', console.error);
+
+httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `Server is running on ${config.server.hostname}:${config.server.port}`));
