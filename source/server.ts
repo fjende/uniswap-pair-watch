@@ -71,7 +71,9 @@ httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `REST API Se
 // WEB3
 const Web3 = require('web3');
 const web3 = new Web3();
-refreshProvider(web3, config.server.infuraurl);
+refreshProvider(web3, config.server.infuraurl)
+    .on('end', () => refreshProvider(web3, config.server.infuraurl))
+    .on('error', () => refreshProvider(web3, config.server.infuraurl));
 
 // UniswapV2Factory Contract
 const factoryAddress = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
@@ -90,7 +92,7 @@ uniswapV2FactoryContract.events
         const token1Symbol = await token1.methods.symbol().call();
         // Check if it's a WETH Pair
         if (token0Symbol === 'WETH' || token1Symbol === 'WETH') {
-            logging.info(NAMESPACE, `Detected new WETH pair on Uniswap V2: ${token0Symbol} ${event.returnValues.token0} - ${token1Symbol} ${event.returnValues.token1}!`);
+            logging.info('Contract', `Detected new WETH pair on Uniswap V2: ${token0Symbol} ${event.returnValues.token0} - ${token1Symbol} ${event.returnValues.token1}!`);
             // Add to Database
             var newToken = token0Symbol === 'WETH' ? token1Symbol : token0Symbol;
             axios
@@ -98,10 +100,12 @@ uniswapV2FactoryContract.events
                     name: newToken
                 })
                 .catch(function (error: Error) {
-                    logging.error(NAMESPACE, error.message, error);
+                    logging.error('Axios', error.message, error);
                 });
         } else {
-            logging.info(NAMESPACE, `New Pair Detected ${token0Symbol} - ${token1Symbol}, but I'm skipping because its not a WETH pair`);
+            logging.info('Contract', `New Pair Detected ${token0Symbol} - ${token1Symbol}, but I'm skipping because its not a WETH pair`);
         }
     })
-    .on('error', console.error);
+    .on('error', async function (error: Error) {
+        logging.error('Contract', error.message, error);
+    });
