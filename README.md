@@ -6,7 +6,7 @@ Scans uniswap factory contract for pairCreated events, logs it into remote mongo
 
 1. clone the repo
 2. `cd` into the repo
-3. run `npm i` to install the dependencies (maybe I forgot to add some globaly installed ones :))
+3. run `npm i` to install the dependencies (hopefully I didn't forget to add any)
 
 ## usage
 
