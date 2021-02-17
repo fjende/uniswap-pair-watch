@@ -10,9 +10,6 @@ var web3 = new Web3();
 export function refreshProvider(web3Obj: typeof Web3, providerUrl: string) {
     const provider = new Web3.providers.WebsocketProvider(providerUrl);
 
-    provider.on('end', () => refreshProvider(web3Obj, providerUrl));
-    provider.on('error', () => refreshProvider(web3Obj, providerUrl));
-
     web3Obj.setProvider(provider);
 
     logging.info(NAMESPACE, `Web3 Websocket Provider initiated on ${providerUrl}`);
