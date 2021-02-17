@@ -3,8 +3,7 @@ import IToken from '../interface/token';
 
 const TokenSchema: Schema = new Schema(
     {
-        name: { type: String, required: true },
-        dateAdded: { type: Date, required: true }
+        name: { type: String, required: true }
     },
     {
         timestamps: true
