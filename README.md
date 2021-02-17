@@ -29,3 +29,7 @@ what your terminal should roughly look like after running `npm run detector`
 [2021-02-17T14:31:12.499Z] [INFO] [Server] [Response] - METHOD: [POST] - URL: [/api/token] - STATUS: [201]
 
 ```
+
+## disclaimers
+
+infura.io has some issue with kicking idle nodes, if ur using ur own node this should work fine. I'm looking for ways to fix it in the meantime.
