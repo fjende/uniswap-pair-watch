@@ -1,4 +1,4 @@
-# uniswap-spair-watch
+# uniswap-pair-watch
 
 Scans uniswap factory contract for pairCreated events, logs it into remote mongoDB.
 
