@@ -24,7 +24,7 @@ what your terminal should roughly look like after running `npm run detector`
 [2021-02-17T14:27:50.915Z] [INFO] [Web3js] Web3 Websocket Provider initiated on wss://mainnet.infura.io/ws/v3/99cca66bff404bdaa272dcc7ab29a94c
 [2021-02-17T14:27:50.931Z] [INFO] [Server] REST API Server is running on localhost:8080
 [2021-02-17T14:27:51.439Z] [INFO] [DB] Remote MongoDB Connected on uniswappairs.fljcl.mongodb.net/UniswapPairs
-[2021-02-17T14:31:12.175Z] [INFO] [Server] Detected new WETH pair on Uniswap V2: VSP 0x1b40183EFB4Dd766f11bDa7A7c3AD8982e998421 - WETH 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2!
+[2021-02-17T14:31:12.175Z] [INFO] [Contract] Detected new WETH pair on Uniswap V2: VSP 0x1b40183EFB4Dd766f11bDa7A7c3AD8982e998421 - WETH 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2!
 [2021-02-17T14:31:12.195Z] [INFO] [Server] [Request] - METHOD: [POST] - URL: [/api/token]
 [2021-02-17T14:31:12.499Z] [INFO] [Server] [Response] - METHOD: [POST] - URL: [/api/token] - STATUS: [201]
 
