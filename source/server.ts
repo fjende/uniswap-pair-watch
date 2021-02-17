@@ -71,9 +71,17 @@ httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `REST API Se
 // WEB3
 const Web3 = require('web3');
 const web3 = new Web3();
-refreshProvider(web3, config.server.infuraurl)
-    .on('end', () => refreshProvider(web3, config.server.infuraurl))
-    .on('error', () => refreshProvider(web3, config.server.infuraurl));
+var provider = refreshProvider(web3, config.server.infuraurl);
+
+provider.on('error', () => {
+    logging.warn('Web3js', 'Web3 Websocket Provider lost connection, trying to reconnect');
+    provider = refreshProvider(web3, config.server.infuraurl);
+});
+
+provider.on('end', () => {
+    logging.warn('Web3js', 'Web3 Websocket Provider lost connection, trying to reconnect');
+    provider = refreshProvider(web3, config.server.infuraurl);
+});
 
 // UniswapV2Factory Contract
 const factoryAddress = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
@@ -86,8 +94,8 @@ var uniswapV2FactoryContract = new web3.eth.Contract(factoryAbi, factoryAddress)
 uniswapV2FactoryContract.events
     .PairCreated({})
     .on('data', async function (event: IEvent) {
-        const token0 = new web3.eth.Contract(erc20abi, event.returnValues.token0);
-        const token1 = new web3.eth.Contract(erc20abi, event.returnValues.token1);
+        const token0 = await new web3.eth.Contract(erc20abi, event.returnValues.token0);
+        const token1 = await new web3.eth.Contract(erc20abi, event.returnValues.token1);
         const token0Symbol = await token0.methods.symbol().call();
         const token1Symbol = await token1.methods.symbol().call();
         // Check if it's a WETH Pair

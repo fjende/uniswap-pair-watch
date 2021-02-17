@@ -1,13 +1,12 @@
 import logging from '../config/logging';
+import Web3 from 'web3';
 
 /**
  * Refreshes provider instance and attaches even handlers to it
  */
 const NAMESPACE = 'Web3js';
-const Web3 = require('web3');
-var web3 = new Web3();
 
-export function refreshProvider(web3Obj: typeof Web3, providerUrl: string) {
+export function refreshProvider(web3Obj: Web3, providerUrl: string) {
     const provider = new Web3.providers.WebsocketProvider(providerUrl);
 
     web3Obj.setProvider(provider);
@@ -16,5 +15,3 @@ export function refreshProvider(web3Obj: typeof Web3, providerUrl: string) {
 
     return provider;
 }
-
-export default web3;
