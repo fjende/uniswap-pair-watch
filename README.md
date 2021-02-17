@@ -11,7 +11,7 @@ Scans uniswap factory contract for pairCreated events, logs it into remote mongo
 ## usage
 
 1. from the root of the repo directory `npm run detector` will run `server.js
-2. if you want to check database status you can send a GET request (i.e via POSTMAN) to localhost:8080/api/tokens
+2. if you want to check the database status you can send a GET request (i.e via Postman) to /api/tokens
 
 ## example output
 
