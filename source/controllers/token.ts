@@ -20,12 +20,11 @@ const getAllTokens = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const createNewToken = (req: Request, res: Response, next: NextFunction) => {
-    let { name, dateAdded } = req.body;
+    let { name } = req.body;
 
     const token = new Token({
         _id: new Mongoose.Types.ObjectId(),
-        name,
-        dateAdded
+        name
     });
 
     return token
