@@ -6,6 +6,7 @@ import config from './config/config';
 import mongoose, { Error } from 'mongoose';
 import tokenRoutes from './routes/tokens';
 import IEvent from './interface/event';
+import { refreshProvider } from './web3js/refreshProvider';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -15,10 +16,10 @@ const axios = require('axios');
 mongoose
     .connect(config.mongo.url, config.mongo.options)
     .then(() => {
-        logging.info(NAMESPACE, 'MongoDB Connected');
+        logging.info('DB', `Remote MongoDB Connected on ${config.mongo.host}`);
     })
     .catch((error) => {
-        logging.error(NAMESPACE, error.message, error);
+        logging.error('DB', error.message, error);
     });
 
 /** Logging */
@@ -65,19 +66,12 @@ router.use((req, res, next) => {
 
 // HTTP Server
 const httpServer = http.createServer(router);
-httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `Server is running on ${config.server.hostname}:${config.server.port}`));
+httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `REST API Server is running on ${config.server.hostname}:${config.server.port}`));
 
 // WEB3
 const Web3 = require('web3');
-const options = {
-    reconnect: {
-        auto: true,
-        delay: 5000, // ms
-        maxAttempts: 5,
-        onTimeout: false
-    }
-};
-const web3 = new Web3(new Web3.providers.WebsocketProvider(config.server.infuraurl, options));
+const web3 = new Web3();
+refreshProvider(web3, config.server.infuraurl);
 
 // UniswapV2Factory Contract
 const factoryAddress = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';

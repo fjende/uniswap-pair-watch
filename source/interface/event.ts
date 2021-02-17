@@ -5,8 +5,8 @@ export default interface IEvent extends Object {
     signature?: String;
     adress: String;
     returnValues: {
-        token0: String;
-        token1: String;
+        token0: string;
+        token1: string;
     };
     logIndex: Number;
     transactionIndex: Number;

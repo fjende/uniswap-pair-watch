@@ -1,10 +1,11 @@
 {
-  "name": "api",
+  "name": "uniswap-pair-watch",
   "version": "1.0.0",
   "description": "",
   "main": "source/server.ts",
   "scripts": {
-    "build": "rm -rf build && prettier --write source/ && tsc"
+    "build": "rm -rf build && prettier --write source/ && tsc",
+    "detector": "ts-node-dev ./source/server.ts"
   },
   "author": "",
   "license": "ISC",
